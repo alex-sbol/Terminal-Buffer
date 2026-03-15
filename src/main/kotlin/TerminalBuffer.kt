@@ -11,9 +11,12 @@ class TerminalBuffer(
     private var cursorX: Int = 0
     private var cursorY: Int = 0
 
+    private var currentStyle: TextStyle = TextStyle()
+
     fun getWidth(): Int = width
     fun getHeight(): Int = height
-
     fun getScrollbackLineCount(): Int = scrollback.size()
+
+
 }
 
