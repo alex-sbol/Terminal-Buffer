@@ -1,10 +1,19 @@
 package org.example
 
-class TerminalBuffer(width: Int, height: Int, size: Int) {
+class TerminalBuffer(
+    private val width: Int,
+    private val height: Int,
+    scrollbackMaxSize: Int
+            ) {
     var screen = Screen(width, height)
-    var buffer = Scrollback(size)
+    var scrollback = Scrollback(scrollbackMaxSize)
 
-    // attributes
+    private var cursorX: Int = 0
+    private var cursorY: Int = 0
 
-    //cursor
+    fun getWidth(): Int = width
+    fun getHeight(): Int = height
+
+    fun getScrollbackLineCount(): Int = scrollback.size()
 }
+
