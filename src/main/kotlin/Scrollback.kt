@@ -2,7 +2,7 @@ package org.example
 
 class Scrollback(val size: Int) {
 
-    val lines = ArrayDeque<List<Cell>>()
+    private val lines = ArrayDeque<List<Cell>>()
 
     fun size(): Int = lines.size
 
