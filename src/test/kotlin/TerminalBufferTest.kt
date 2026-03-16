@@ -301,4 +301,66 @@ class TerminalBufferTest {
         assertTrue(dump.contains("=== Screen ==="))
         assertTrue(dump.contains("abc"))
     }
+
+    @Test
+    fun resizeNarrowerReflowsIntoMoreLines() {
+        val tb = TerminalBuffer(5, 3, 10)
+        tb.writeText("ABCDE")
+        tb.setCursorPosition(0, 1)
+        tb.writeText("FG")
+
+        tb.resize(3, 3)
+
+        assertEquals("ABC", tb.getLineAsString(0))
+        assertEquals("DE", tb.getLineAsString(1))
+        assertEquals("FG", tb.getLineAsString(2))
+    }
+
+    @Test
+    fun resizeWiderPreservesLogicalLineBoundaries() {
+        val tb = TerminalBuffer(3, 3, 10)
+        tb.writeText("ABC")
+        tb.setCursorPosition(0, 1)
+        tb.writeText("DEF")
+
+        tb.resize(6, 3)
+
+        assertEquals("ABC", tb.getLineAsString(0))
+        assertEquals("DEF", tb.getLineAsString(1))
+        assertEquals("", tb.getLineAsString(2))
+    }
+
+    @Test
+    fun resizeShorterMovesTopLinesIntoScrollback() {
+        val tb = TerminalBuffer(4, 4, 10)
+
+        tb.setCursorPosition(0, 0)
+        tb.writeText("L1")
+        tb.setCursorPosition(0, 1)
+        tb.writeText("L2")
+        tb.setCursorPosition(0, 2)
+        tb.writeText("L3")
+        tb.setCursorPosition(0, 3)
+        tb.writeText("L4")
+
+        tb.resize(4, 2)
+
+        assertEquals("L1", tb.getLineAsString(0))
+        assertEquals("L2", tb.getLineAsString(1))
+        assertEquals("L3", tb.getLineAsString(2))
+        assertEquals("L4", tb.getLineAsString(3))
+    }
+
+    @Test
+    fun resizeTallerPadsWithBlankLines() {
+        val tb = TerminalBuffer(4, 2, 10)
+        tb.writeText("AB")
+
+        tb.resize(4, 4)
+        println("width=${tb.getWidth()}, height=${tb.getHeight()}")
+        println("screenContent=\n${tb.getScreenContentAsString()}")
+
+        assertEquals("AB", tb.getLineAsString(2))
+        assertEquals("", tb.getLineAsString(3))
+    }
 }
