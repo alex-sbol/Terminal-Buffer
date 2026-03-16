@@ -144,3 +144,11 @@ The JUnit test suite covers:
 - clear operations
 - reading from screen and scrollback
 - edge cases and debug output
+
+## Improvements
+
+- I think that Right now the class Terminal buffer handles too much functionality. I would look into refactoring some functions such that TerminalBuffer would instead call more functionality of Screen and Scrollback instead.
+
+- The cursor can also become its own class and everything cursor related should be handled inside it. This would improve separation of concerns.
+
+- Abstraction for line of cells could be introduced.
